@@ -216,8 +216,13 @@ export default function useAskPrompt(threadId?: number) {
     const response = await createInstantRecommendedQuestions({
       variables: { data: { previousQuestions } },
     });
+    const taskId = response.data?.createInstantRecommendedQuestions?.id;
+    // Without a taskId the polling query would loop with empty variables and
+    // get rejected as HTTP 400 by Apollo (taskId is non-null in the schema),
+    // which triggers the global network-error toast.
+    if (!taskId) return;
     fetchInstantRecommendedQuestions({
-      variables: { taskId: response.data.createInstantRecommendedQuestions.id },
+      variables: { taskId },
     });
   }, [originalQuestion]);
 

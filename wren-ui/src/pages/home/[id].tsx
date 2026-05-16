@@ -306,6 +306,7 @@ export default function HomeThread() {
   const onCreateResponse = async (payload: CreateThreadResponseInput) => {
     try {
       askPrompt.onStopPolling();
+      askPrompt.onStopRecommend();
 
       const threadId = thread.id;
       await createThreadResponse({
