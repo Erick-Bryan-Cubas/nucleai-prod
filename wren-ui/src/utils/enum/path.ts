@@ -13,4 +13,5 @@ export enum Path {
   APIManagement = '/api-management',
   APIManagementHistory = '/api-management/history',
   APIManagementSettings = '/api-management/settings',
+  About = '/about',
 }

@@ -1,0 +1,23 @@
+{
+	# Habilita o módulo caddy-ratelimit que vem compilado no Dockerfile.
+	order rate_limit before reverse_proxy
+}
+
+nucleai.datasageanalytics.cloud {
+	encode gzip
+
+	# Rate-limit por IP no endpoint GraphQL: 60 requisições por minuto.
+	# A UI usa polling de 2s × 4 queries simultâneas = 120 req/min em pico,
+	# mas vem do mesmo IP atrás do navegador, então 60/min protege contra
+	# uma aba aberta sozinha enquanto ainda absorve picos legítimos curtos.
+	@graphql path /api/graphql
+	rate_limit @graphql {
+		zone graphql {
+			key {http.request.remote.host}
+			events 60
+			window 1m
+		}
+	}
+
+	reverse_proxy wren-ui:3000
+}

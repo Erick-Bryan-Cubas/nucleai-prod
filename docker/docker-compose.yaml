@@ -7,6 +7,11 @@ volumes:
   langfuse_clickhouse_logs:
   langfuse_minio_data:
   langfuse_redis_data:
+  # NucleAI: Caddy (certs + state from Let's Encrypt + rate-limit)
+  caddy_data:
+  caddy_config:
+  # NucleAI: SQLite snapshots written by the backup sidecar
+  sqlite_backups:
 
 networks:
   wren:
@@ -143,6 +148,12 @@ services:
       # NucleAI: directory (inside wren-ui) where the UI writes config.yaml
       # and .env.runtime — same host path that wren-ai-service reads from.
       LLM_SHARED_DIR: /app/shared
+      # NucleAI: Langfuse credentials used by /api/langfuse_trace to fetch
+      # tokens/cost for the trace chip shown next to each answer. Server-side
+      # only — never exposed to the browser.
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse-web:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
     ports:
       # HOST_PORT is the port you want to expose to the host machine
       - ${HOST_PORT}:3000
@@ -314,3 +325,53 @@ services:
       LANGFUSE_INIT_USER_PASSWORD: ${LANGFUSE_INIT_USER_PASSWORD:-changeme}
     networks:
       - wren
+
+  # ============================================================
+  # NucleAI: Caddy 2 reverse proxy
+  # - HTTPS via Let's Encrypt automático
+  # - Rate-limit (60 req/min por IP) no /api/graphql
+  # Build local porque o módulo caddy-ratelimit não vem na imagem oficial.
+  # ============================================================
+  caddy:
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - wren
+    depends_on:
+      - wren-ui
+
+  # ============================================================
+  # NucleAI: SQLite backup sidecar
+  # Roda backup.sh a cada 6h (ajustável via BACKUP_INTERVAL).
+  # Snapshots ficam no volume sqlite_backups e dura KEEP_DAYS dias.
+  # ============================================================
+  sqlite-backup:
+    image: alpine:3.20
+    restart: unless-stopped
+    command: >
+      sh -c "apk add --no-cache sqlite && while true; do
+        /backup/backup.sh;
+        sleep ${BACKUP_INTERVAL:-21600};
+      done"
+    environment:
+      SOURCE: /data/db.sqlite3
+      DEST_DIR: /backups
+      KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+    volumes:
+      - data:/data:ro
+      - sqlite_backups:/backups
+      - ./backup/backup.sh:/backup/backup.sh:ro
+    networks:
+      - wren
+    depends_on:
+      - wren-ui

@@ -131,7 +131,7 @@ export default function HomeThread() {
     });
   const [fetchThreadResponse, threadResponseResult] =
     useThreadResponseLazyQuery({
-      pollInterval: 1000,
+      pollInterval: 2000,
     });
 
   useEffect(() => {
@@ -157,7 +157,7 @@ export default function HomeThread() {
     fetchThreadRecommendationQuestions,
     threadRecommendationQuestionsResult,
   ] = useGetThreadRecommendationQuestionsLazyQuery({
-    pollInterval: 1000,
+    pollInterval: 2000,
   });
 
   const [generateThreadResponseAnswer] =
@@ -315,6 +315,11 @@ export default function HomeThread() {
       setShowRecommendedQuestions(false);
     } catch (error) {
       console.error(error);
+      // On failure the previous response state is stale; halt every poll so
+      // we don't keep firing requests against an orphan task and trigger the
+      // global network-error toast.
+      threadResponseResult.stopPolling();
+      threadRecommendationQuestionsResult.stopPolling();
     }
   };
 

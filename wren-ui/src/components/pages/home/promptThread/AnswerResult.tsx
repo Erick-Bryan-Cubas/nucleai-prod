@@ -17,6 +17,7 @@ import RecommendedQuestions, {
   getRecommendedQuestionProps,
 } from '@/components/pages/home/RecommendedQuestions';
 import ViewBlock from '@/components/pages/home/promptThread/ViewBlock';
+import TraceCostChip from '@/components/pages/home/promptThread/TraceCostChip';
 import ViewSQLTabContent from '@/components/pages/home/promptThread/ViewSQLTabContent';
 import TextBasedAnswer, {
   getAnswerIsFinished,
@@ -382,6 +383,7 @@ export default function AnswerResult(props: Props) {
                 )
               }
             />
+            <TraceCostChip traceId={askingTask?.traceId} />
           </div>
           {renderRecommendedQuestions(
             isLastThreadResponse,

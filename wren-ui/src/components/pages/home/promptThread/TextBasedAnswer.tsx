@@ -254,6 +254,7 @@ export default function TextBasedAnswer(props: AnswerResultProps) {
                 error={previewDataResult.error}
                 loading={previewDataResult.loading}
                 previewData={previewDataResult?.data?.previewData}
+                exportFilename={threadResponse?.question}
               />
             </div>
           </div>

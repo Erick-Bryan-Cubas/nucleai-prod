@@ -84,6 +84,14 @@ export default function HeaderBar() {
               >
                 API
               </StyledButton>
+              <StyledButton
+                shape="round"
+                size="small"
+                $isHighlight={pathname.startsWith(Path.About)}
+                onClick={() => router.push(Path.About)}
+              >
+                Sobre
+              </StyledButton>
             </Space>
           )}
         </Space>

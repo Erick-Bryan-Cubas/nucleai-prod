@@ -31,6 +31,52 @@ const getGroupedQuestions = (
   );
 };
 
+// Fallback shown while the LLM hasn't generated suggestions yet, so the user
+// always has a guided demo entry-point. Categories map to the three parquet
+// files loaded in DuckDB (boletos, sacados/cedentes, scores de risco).
+const NUCLEAI_FALLBACK_QUESTIONS: GroupedQuestion[] = [
+  {
+    category: 'Boletos',
+    question: 'Quantos boletos foram pagos no último mês?',
+    sql: '',
+  },
+  {
+    category: 'Boletos',
+    question: 'Qual o valor total emitido por tipo de espécie?',
+    sql: '',
+  },
+  {
+    category: 'Boletos',
+    question: 'Quais os 10 maiores boletos por valor nominal?',
+    sql: '',
+  },
+  {
+    category: 'Inadimplência',
+    question: 'Qual o tempo médio de atraso por CNPJ?',
+    sql: '',
+  },
+  {
+    category: 'Inadimplência',
+    question: 'Quais CNPJs têm maior share de inadimplência entre 6 e 15 dias?',
+    sql: '',
+  },
+  {
+    category: 'Risco',
+    question: 'Qual a distribuição do score de quantidade por UF?',
+    sql: '',
+  },
+  {
+    category: 'Risco',
+    question: 'Quais setores (CNAE) têm pior índice de liquidez 1 mês?',
+    sql: '',
+  },
+  {
+    category: 'Risco',
+    question: 'Top 5 CNPJs com melhor score de materialidade evolução',
+    sql: '',
+  },
+];
+
 export default function useRecommendedQuestionsInstruction() {
   const [showRetry, setShowRetry] = useState<boolean>(false);
   const [generating, setGenerating] = useState<boolean>(false);
@@ -91,7 +137,7 @@ export default function useRecommendedQuestionsInstruction() {
             RecommendedQuestionsTaskStatus.FAILED
         ) {
           message.error(
-            `We couldn't regenerate questions right now. Let's try again later.`,
+            `Não conseguimos regenerar as perguntas agora. Tente novamente mais tarde.`,
           );
         }
       } else {
@@ -129,7 +175,7 @@ export default function useRecommendedQuestionsInstruction() {
       return {
         ...baseProps,
         icon: <ReloadOutlined />,
-        children: 'Regenerate',
+        children: 'Gerar novas perguntas',
       };
     }
 
@@ -141,18 +187,27 @@ export default function useRecommendedQuestionsInstruction() {
         <Icon component={CopilotSVG} className="geekblue-6" />
       ),
       children: generating
-        ? 'Generating questions'
+        ? 'Gerando perguntas...'
         : showRetry
-          ? 'Retry'
-          : 'What could I ask?',
+          ? 'Tentar novamente'
+          : 'O que posso perguntar?',
     };
   }, [generating, isRegenerate, showRetry, showRecommendedQuestionsPromptMode]);
 
+  // When the LLM hasn't produced suggestions yet, surface a curated set so the
+  // demo always has actionable starting points (instead of an empty button).
+  const effectiveQuestions =
+    recommendedQuestions.length > 0
+      ? recommendedQuestions
+      : NUCLEAI_FALLBACK_QUESTIONS;
+  const effectivePromptMode =
+    showRecommendedQuestionsPromptMode || recommendedQuestions.length === 0;
+
   return {
-    recommendedQuestions,
+    recommendedQuestions: effectiveQuestions,
     generating,
     showRetry,
-    showRecommendedQuestionsPromptMode,
+    showRecommendedQuestionsPromptMode: effectivePromptMode,
     buttonProps,
   };
 }

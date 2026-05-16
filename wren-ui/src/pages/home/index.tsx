@@ -1,4 +1,4 @@
-import { ComponentRef, useMemo, useRef } from 'react';
+import { ComponentRef, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Typography } from 'antd';
 import styled from 'styled-components';
@@ -117,6 +117,12 @@ export default function Home() {
   const router = useRouter();
   const homeSidebar = useHomeSidebar();
   const askPrompt = useAskPrompt();
+
+  // Pre-warm downstream services on landing so the first question doesn't
+  // hit a cold qdrant/embedding model. Fire-and-forget — we don't block on it.
+  useEffect(() => {
+    fetch('/api/warmup').catch(() => undefined);
+  }, []);
 
   const { data: suggestedQuestionsData } = useSuggestedQuestionsQuery({
     fetchPolicy: 'cache-and-network',

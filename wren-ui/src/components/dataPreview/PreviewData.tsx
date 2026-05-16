@@ -1,10 +1,12 @@
 import { memo, useMemo } from 'react';
-import { Alert, Typography, Button } from 'antd';
+import { Alert, Typography, Button, Tooltip } from 'antd';
+import DownloadOutlined from '@ant-design/icons/DownloadOutlined';
 import { ApolloError } from '@apollo/client';
 import styled from 'styled-components';
 import { getColumnTypeIcon } from '@/utils/columnType';
 import PreviewDataContent from '@/components/dataPreview/PreviewDataContent';
 import { parseGraphQLError } from '@/utils/errorHandler';
+import { downloadCsv, slugifyFilename } from '@/utils/export';
 
 const { Text } = Typography;
 
@@ -84,10 +86,24 @@ interface Props {
   error?: ApolloError;
   locale?: { emptyText: React.ReactNode };
   copyable?: boolean;
+  exportFilename?: string;
 }
 
+const ExportToolbar = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 6px;
+`;
+
 export default function PreviewData(props: Props) {
-  const { previewData, loading, error, locale, copyable = true } = props;
+  const {
+    previewData,
+    loading,
+    error,
+    locale,
+    copyable = true,
+    exportFilename,
+  } = props;
 
   const columns = useMemo(
     () =>
@@ -110,12 +126,45 @@ export default function PreviewData(props: Props) {
     );
   }
 
+  const canExport =
+    !loading &&
+    !!previewData?.columns?.length &&
+    !!previewData?.data?.length;
+
+  const onExport = () => {
+    if (!previewData) return;
+    const filename = `${slugifyFilename(exportFilename || 'nucleai-export')}-${
+      new Date().toISOString().slice(0, 10)
+    }`;
+    downloadCsv(
+      { columns: previewData.columns, data: previewData.data },
+      filename,
+    );
+  };
+
   return (
-    <PreviewDataContent
-      columns={columns}
-      data={previewData?.data || []}
-      loading={loading}
-      locale={locale}
-    />
+    <>
+      {canExport && (
+        <ExportToolbar>
+          <Tooltip title="Baixar dados como CSV (compatível com Excel)">
+            <Button
+              size="small"
+              type="text"
+              icon={<DownloadOutlined />}
+              onClick={onExport}
+              style={{ color: 'var(--gray-4)' }}
+            >
+              Exportar CSV
+            </Button>
+          </Tooltip>
+        </ExportToolbar>
+      )}
+      <PreviewDataContent
+        columns={columns}
+        data={previewData?.data || []}
+        loading={loading}
+        locale={locale}
+      />
+    </>
   );
 }

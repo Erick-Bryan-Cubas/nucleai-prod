@@ -57,7 +57,7 @@ class SaveTablesErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create model(s).';
+        return 'Falha ao criar o(s) modelo(s).';
     }
   }
 }
@@ -66,7 +66,7 @@ class SaveRelationsErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to define relations.';
+        return 'Falha ao definir os relacionamentos.';
     }
   }
 }
@@ -75,7 +75,7 @@ class CreateAskingTaskErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create asking task.';
+        return 'Falha ao criar a tarefa de pergunta.';
     }
   }
 }
@@ -84,7 +84,7 @@ class CreateThreadErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create thread.';
+        return 'Falha ao criar o chat.';
     }
   }
 }
@@ -93,7 +93,7 @@ class UpdateThreadErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update thread.';
+        return 'Falha ao atualizar o chat.';
     }
   }
 }
@@ -102,7 +102,7 @@ class DeleteThreadErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to delete thread.';
+        return 'Falha ao excluir o chat.';
     }
   }
 }
@@ -111,7 +111,7 @@ class CreateThreadResponseErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create thread response.';
+        return 'Falha ao criar a resposta do chat.';
     }
   }
 }
@@ -120,7 +120,7 @@ class UpdateThreadResponseErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update thread response.';
+        return 'Falha ao atualizar a resposta do chat.';
     }
   }
 }
@@ -129,7 +129,7 @@ class GenerateThreadResponseAnswerErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to generate thread response answer.';
+        return 'Falha ao gerar a resposta do chat.';
     }
   }
 }
@@ -138,7 +138,7 @@ class AdjustThreadResponseErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to adjust thread response answer.';
+        return 'Falha ao ajustar a resposta do chat.';
     }
   }
 }
@@ -147,7 +147,7 @@ class CreateViewErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create view.';
+        return 'Falha ao criar a view.';
     }
   }
 }
@@ -157,7 +157,7 @@ class UpdateDataSourceErrorHandler extends ErrorHandler {
     switch (error.extensions?.code) {
       default:
         return replaceMessage(
-          `Failed to update %{data source}.`,
+          `Falha ao atualizar a %{fonte de dados}.`,
           error.message,
         );
     }
@@ -168,7 +168,7 @@ class CreateModelErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create model.';
+        return 'Falha ao criar o modelo.';
     }
   }
 }
@@ -177,7 +177,7 @@ class UpdateModelErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update model.';
+        return 'Falha ao atualizar o modelo.';
     }
   }
 }
@@ -186,7 +186,7 @@ class DeleteModelErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to delete model.';
+        return 'Falha ao excluir o modelo.';
     }
   }
 }
@@ -195,7 +195,7 @@ class UpdateModelMetadataErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update model metadata.';
+        return 'Falha ao atualizar metadados do modelo.';
     }
   }
 }
@@ -204,7 +204,7 @@ class CreateCalculatedFieldErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create calculated field.';
+        return 'Falha ao criar campo calculado.';
     }
   }
 }
@@ -213,7 +213,7 @@ class UpdateCalculatedFieldErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update calculated field.';
+        return 'Falha ao atualizar campo calculado.';
     }
   }
 }
@@ -222,7 +222,7 @@ class DeleteCalculatedFieldErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to delete calculated field.';
+        return 'Falha ao excluir campo calculado.';
     }
   }
 }
@@ -231,7 +231,7 @@ class CreateRelationshipErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create relationship.';
+        return 'Falha ao criar o relacionamento.';
     }
   }
 }
@@ -240,7 +240,7 @@ class UpdateRelationshipErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update relationship.';
+        return 'Falha ao atualizar o relacionamento.';
     }
   }
 }
@@ -249,7 +249,7 @@ class DeleteRelationshipErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to delete relationship.';
+        return 'Falha ao excluir o relacionamento.';
     }
   }
 }
@@ -258,7 +258,7 @@ class UpdateViewMetadataErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update view metadata.';
+        return 'Falha ao atualizar metadados da view.';
     }
   }
 }
@@ -267,7 +267,7 @@ class TriggerDataSourceDetectionErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to scan data source.';
+        return 'Falha ao escanear a fonte de dados.';
     }
   }
 }
@@ -276,7 +276,7 @@ class ResolveSchemaChangeErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to resolve schema change.';
+        return 'Falha ao resolver mudança de schema.';
     }
   }
 }
@@ -285,7 +285,7 @@ class CreateDashboardItemErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create dashboard item.';
+        return 'Falha ao criar item do dashboard.';
     }
   }
 }
@@ -294,7 +294,7 @@ class UpdateDashboardItemErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update dashboard item.';
+        return 'Falha ao atualizar item do dashboard.';
     }
   }
 }
@@ -303,7 +303,7 @@ class UpdateDashboardItemLayoutsErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update dashboard item layouts.';
+        return 'Falha ao atualizar layout do dashboard.';
     }
   }
 }
@@ -312,7 +312,7 @@ class DeleteDashboardItemErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to delete dashboard item.';
+        return 'Falha ao excluir item do dashboard.';
     }
   }
 }
@@ -321,7 +321,7 @@ class SetDashboardScheduleErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to set dashboard schedule.';
+        return 'Falha ao agendar atualização do dashboard.';
     }
   }
 }
@@ -330,7 +330,7 @@ class CreateSqlPairErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create question-sql pair.';
+        return 'Falha ao criar par Pergunta-SQL.';
     }
   }
 }
@@ -339,7 +339,7 @@ class UpdateSqlPairErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update question-sql pair.';
+        return 'Falha ao atualizar par Pergunta-SQL.';
     }
   }
 }
@@ -348,7 +348,7 @@ class DeleteSqlPairErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to delete question-sql pair.';
+        return 'Falha ao excluir par Pergunta-SQL.';
     }
   }
 }
@@ -357,7 +357,7 @@ class CreateInstructionErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to create instruction.';
+        return 'Falha ao criar instrução.';
     }
   }
 }
@@ -366,7 +366,7 @@ class UpdateInstructionErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to update instruction.';
+        return 'Falha ao atualizar instrução.';
     }
   }
 }
@@ -375,7 +375,7 @@ class DeleteInstructionErrorHandler extends ErrorHandler {
   public getErrorMessage(error: GraphQLError) {
     switch (error.extensions?.code) {
       default:
-        return 'Failed to delete instruction.';
+        return 'Falha ao excluir instrução.';
     }
   }
 }
@@ -490,6 +490,7 @@ const reportNetworkError = () => {
 
 const errorHandler = (error: ErrorResponse) => {
   if (error.networkError) {
+    const statusCode = (error.networkError as any)?.statusCode;
     // Diagnostic log so we can see exactly which polled operation is firing
     // a network-level failure (HTTP 4xx/5xx → Apollo networkError).
     // eslint-disable-next-line no-console
@@ -497,10 +498,15 @@ const errorHandler = (error: ErrorResponse) => {
       '[apollo networkError]',
       error.operation?.operationName,
       error.operation?.variables,
-      (error.networkError as any)?.statusCode,
+      statusCode,
       (error.networkError as any)?.result || (error.networkError as any)?.bodyText,
     );
-    reportNetworkError();
+    // Only real network failures (no statusCode = fetch failure, or 5xx) count
+    // toward the "sem conexão" toast. 4xx means the server is reachable and
+    // rejected the input — those are bugs to fix, not connectivity issues.
+    const isRealNetworkFailure =
+      !statusCode || (statusCode >= 500 && statusCode < 600);
+    if (isRealNetworkFailure) reportNetworkError();
   }
 
   const operationName = error?.operation?.operationName || '';

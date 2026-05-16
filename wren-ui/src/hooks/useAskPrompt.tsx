@@ -170,7 +170,7 @@ export default function useAskPrompt(threadId?: number) {
     onError: (error) => console.error(error),
   });
   const [fetchAskingTask, askingTaskResult] = useAskingTaskLazyQuery({
-    pollInterval: 1000,
+    pollInterval: 2000,
   });
   const [fetchAskingStreamTask, askingStreamTaskResult] = useAskingStreamTask();
   const [createInstantRecommendedQuestions] =
@@ -179,7 +179,7 @@ export default function useAskPrompt(threadId?: number) {
     });
   const [fetchInstantRecommendedQuestions, instantRecommendedQuestionsResult] =
     useInstantRecommendedQuestionsLazyQuery({
-      pollInterval: 1000,
+      pollInterval: 2000,
     });
 
   const askingTask = useMemo(

@@ -72,7 +72,7 @@ export default function useAdjustAnswer(threadId?: number) {
     });
   const [fetchThreadResponse, threadResponseResult] =
     useThreadResponseLazyQuery({
-      pollInterval: 1000,
+      pollInterval: 2000,
     });
 
   const loading = adjustThreadResponseResult.loading;
