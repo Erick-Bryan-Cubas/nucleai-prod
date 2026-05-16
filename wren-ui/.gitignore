@@ -1,7 +1,10 @@
 .next/
 node_modules/
 .env.local
-data/
+# `data/` originalmente ignorava dados gerados em runtime,
+# mas src/apollo/server/data/ tem código fonte essencial (sample queries).
+# Restringe a regra apenas ao diretório raiz.
+/data/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
