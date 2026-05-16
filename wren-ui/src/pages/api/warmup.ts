@@ -24,7 +24,7 @@ export default async function handler(
   // Don't block the HTTP response on the probes — return immediately.
   void Promise.all([
     poke(`${config.wrenAIEndpoint}/health`),
-    poke(`${config.wrenEngineEndpoint}/v1/health`),
+    poke(`${config.wrenEngineEndpoint}/v1/mdl/status`),
     poke(`${config.ibisServerEndpoint}/health`),
   ]);
   res.status(202).json({ warming: true });

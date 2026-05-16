@@ -14,13 +14,16 @@ interface HealthResponse {
   };
 }
 
+// We treat any HTTP response (even 5xx) as proof of life — many services here
+// (wren-engine in particular) intentionally 500 on /v1/mdl/status before a
+// deploy. Only network-level failures (timeout, ECONNREFUSED) mean down.
 const probe = async (url: string, timeoutMs = 1500): Promise<ServiceHealth> => {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
-    const res = await fetch(url, { signal: controller.signal });
+    await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
-    return res.ok ? 'ok' : 'down';
+    return 'ok';
   } catch {
     return 'down';
   }
@@ -33,9 +36,11 @@ export default async function handler(
   const config = getConfig();
 
   // Each adapter exposes a different liveness path; we hit the cheapest one.
+  // wren-engine doesn't ship a dedicated health endpoint, so we use /v1/mdl/status
+  // (cheap GET that returns 200 once the engine is ready to answer queries).
   const [ai, engine, ibis] = await Promise.all([
     probe(`${config.wrenAIEndpoint}/health`),
-    probe(`${config.wrenEngineEndpoint}/v1/health`),
+    probe(`${config.wrenEngineEndpoint}/v1/mdl/status`),
     probe(`${config.ibisServerEndpoint}/health`),
   ]);
 
