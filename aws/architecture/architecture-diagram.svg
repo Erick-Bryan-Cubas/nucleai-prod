@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #232f3e; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 14px; fill: #666; }
+      .service-name { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; fill: #232f3e; }
+      .service-desc { font-family: Arial, sans-serif; font-size: 10px; fill: #666; }
+      .aws-box { fill: #f8f8f8; stroke: #ff9900; stroke-width: 2; rx: 8; }
+      .vpc-box { fill: #f0f8ff; stroke: #147eba; stroke-width: 2; rx: 6; stroke-dasharray: 5,3; }
+      .subnet-public { fill: #e8f5e9; stroke: #4caf50; stroke-width: 1; rx: 4; }
+      .subnet-private { fill: #e3f2fd; stroke: #2196f3; stroke-width: 1; rx: 4; }
+      .subnet-data { fill: #fce4ec; stroke: #e91e63; stroke-width: 1; rx: 4; }
+      .service-box { fill: #fff; stroke: #ff9900; stroke-width: 2; rx: 6; }
+      .ecs-task { fill: #fff3e0; stroke: #ff9900; stroke-width: 1; rx: 4; }
+      .aws-service { fill: #fff; stroke: #232f3e; stroke-width: 1; rx: 4; }
+      .external { fill: #f3e5f5; stroke: #9c27b0; stroke-width: 1; rx: 4; }
+      .arrow { stroke: #666; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+      .arrow-data { stroke: #2196f3; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-blue); }
+      .label { font-family: Arial, sans-serif; font-size: 9px; fill: #666; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2196f3" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#fff"/>
+
+  <!-- Title -->
+  <text x="600" y="35" class="title" text-anchor="middle">NucleAI - Arquitetura AWS ECS Fargate</text>
+  <text x="600" y="55" class="subtitle" text-anchor="middle">Região: sa-east-1 (São Paulo) | VPC: 10.0.0.0/16</text>
+
+  <!-- AWS Cloud Box -->
+  <rect x="50" y="70" width="1100" height="780" class="aws-box"/>
+  <text x="70" y="95" class="service-name">☁️ AWS Cloud</text>
+
+  <!-- Users -->
+  <rect x="20" y="280" width="80" height="60" class="external"/>
+  <text x="60" y="305" class="service-name" text-anchor="middle">👥 Users</text>
+  <text x="60" y="325" class="service-desc" text-anchor="middle">Internet</text>
+
+  <!-- Route 53 -->
+  <rect x="130" y="180" width="100" height="50" class="aws-service"/>
+  <text x="180" y="205" class="service-name" text-anchor="middle">🔗 Route 53</text>
+  <text x="180" y="220" class="service-desc" text-anchor="middle">DNS</text>
+
+  <!-- CloudFront -->
+  <rect x="130" y="250" width="100" height="50" class="aws-service"/>
+  <text x="180" y="275" class="service-name" text-anchor="middle">🌍 CloudFront</text>
+  <text x="180" y="290" class="service-desc" text-anchor="middle">CDN + Cache</text>
+
+  <!-- WAF -->
+  <rect x="130" y="320" width="100" height="50" class="aws-service"/>
+  <text x="180" y="345" class="service-name" text-anchor="middle">🛡️ WAF</text>
+  <text x="180" y="360" class="service-desc" text-anchor="middle">Firewall</text>
+
+  <!-- VPC Box -->
+  <rect x="260" y="100" width="870" height="550" class="vpc-box"/>
+  <text x="280" y="125" class="service-name">🌐 VPC: 10.0.0.0/16</text>
+
+  <!-- Public Subnets -->
+  <rect x="280" y="140" width="200" height="180" class="subnet-public"/>
+  <text x="290" y="160" class="service-name">Public Subnets</text>
+
+  <!-- ALB -->
+  <rect x="300" y="175" width="160" height="50" class="service-box"/>
+  <text x="380" y="200" class="service-name" text-anchor="middle">⚖️ ALB</text>
+  <text x="380" y="215" class="service-desc" text-anchor="middle">Port: 443</text>
+
+  <!-- NAT Gateways -->
+  <rect x="300" y="240" width="70" height="40" class="aws-service"/>
+  <text x="335" y="260" class="service-desc" text-anchor="middle">NAT AZ-a</text>
+  
+  <rect x="390" y="240" width="70" height="40" class="aws-service"/>
+  <text x="425" y="260" class="service-desc" text-anchor="middle">NAT AZ-b</text>
+
+  <!-- Private Subnets -->
+  <rect x="280" y="340" width="550" height="290" class="subnet-private"/>
+  <text x="290" y="360" class="service-name">Private Subnets (ECS Fargate)</text>
+
+  <!-- ECS Cluster -->
+  <rect x="300" y="375" width="510" height="240" class="service-box"/>
+  <text x="310" y="395" class="service-name">🐳 ECS Fargate Cluster</text>
+
+  <!-- wren-ui -->
+  <rect x="320" y="410" width="110" height="55" class="ecs-task"/>
+  <text x="375" y="430" class="service-name" text-anchor="middle">📱 wren-ui</text>
+  <text x="375" y="445" class="service-desc" text-anchor="middle">Port: 3000</text>
+  <text x="375" y="458" class="service-desc" text-anchor="middle">0.5 vCPU | 1GB</text>
+
+  <!-- wren-ai-service -->
+  <rect x="450" y="410" width="110" height="55" class="ecs-task"/>
+  <text x="505" y="430" class="service-name" text-anchor="middle">🤖 wren-ai</text>
+  <text x="505" y="445" class="service-desc" text-anchor="middle">Port: 5555</text>
+  <text x="505" y="458" class="service-desc" text-anchor="middle">1 vCPU | 2GB</text>
+
+  <!-- qdrant -->
+  <rect x="580" y="410" width="110" height="55" class="ecs-task"/>
+  <text x="635" y="430" class="service-name" text-anchor="middle">🔍 Qdrant</text>
+  <text x="635" y="445" class="service-desc" text-anchor="middle">Port: 6333</text>
+  <text x="635" y="458" class="service-desc" text-anchor="middle">1 vCPU | 2GB</text>
+
+  <!-- wren-engine -->
+  <rect x="320" y="480" width="110" height="55" class="ecs-task"/>
+  <text x="375" y="500" class="service-name" text-anchor="middle">⚙️ Engine</text>
+  <text x="375" y="515" class="service-desc" text-anchor="middle">Port: 8080</text>
+  <text x="375" y="528" class="service-desc" text-anchor="middle">1 vCPU | 2GB</text>
+
+  <!-- ibis-server -->
+  <rect x="450" y="480" width="110" height="55" class="ecs-task"/>
+  <text x="505" y="500" class="service-name" text-anchor="middle">🔌 Ibis Server</text>
+  <text x="505" y="515" class="service-desc" text-anchor="middle">Port: 8000</text>
+  <text x="505" y="528" class="service-desc" text-anchor="middle">0.5 vCPU | 1GB</text>
+
+  <!-- Service Discovery -->
+  <rect x="580" y="480" width="110" height="55" class="aws-service"/>
+  <text x="635" y="500" class="service-name" text-anchor="middle">🔎 Cloud Map</text>
+  <text x="635" y="515" class="service-desc" text-anchor="middle">Service</text>
+  <text x="635" y="528" class="service-desc" text-anchor="middle">Discovery</text>
+
+  <!-- Auto Scaling Info -->
+  <rect x="320" y="550" width="370" height="45" fill="#fff3e0" stroke="#ff9900" stroke-width="1" rx="4"/>
+  <text x="505" y="570" class="service-name" text-anchor="middle">📊 Auto Scaling</text>
+  <text x="505" y="585" class="service-desc" text-anchor="middle">CPU > 70% | Memory > 80% | Min: 2 | Max: 10 tasks</text>
+
+  <!-- Data Subnet -->
+  <rect x="850" y="340" width="130" height="290" class="subnet-data"/>
+  <text x="860" y="360" class="service-name">Data Subnet</text>
+
+  <!-- EFS -->
+  <rect x="865" y="380" width="100" height="80" class="aws-service"/>
+  <text x="915" y="410" class="service-name" text-anchor="middle">💾 EFS</text>
+  <text x="915" y="430" class="service-desc" text-anchor="middle">Persistent</text>
+  <text x="915" y="445" class="service-desc" text-anchor="middle">Storage</text>
+
+  <!-- S3 -->
+  <rect x="865" y="480" width="100" height="60" class="aws-service"/>
+  <text x="915" y="505" class="service-name" text-anchor="middle">📦 S3</text>
+  <text x="915" y="520" class="service-desc" text-anchor="middle">Backups</text>
+
+  <!-- CloudWatch -->
+  <rect x="865" y="560" width="100" height="55" class="aws-service"/>
+  <text x="915" y="583" class="service-name" text-anchor="middle">📊 CloudWatch</text>
+  <text x="915" y="598" class="service-desc" text-anchor="middle">Logs & Metrics</text>
+
+  <!-- Managed Services Row -->
+  <rect x="280" y="660" width="850" height="80" fill="#f5f5f5" stroke="#232f3e" stroke-width="1" rx="6"/>
+  <text x="290" y="680" class="service-name">🔧 Serviços Gerenciados AWS</text>
+
+  <!-- ECR -->
+  <rect x="300" y="695" width="90" height="35" class="aws-service"/>
+  <text x="345" y="717" class="service-desc" text-anchor="middle">📦 ECR</text>
+
+  <!-- Secrets Manager -->
+  <rect x="410" y="695" width="100" height="35" class="aws-service"/>
+  <text x="460" y="717" class="service-desc" text-anchor="middle">🔐 Secrets Mgr</text>
+
+  <!-- KMS -->
+  <rect x="530" y="695" width="80" height="35" class="aws-service"/>
+  <text x="570" y="717" class="service-desc" text-anchor="middle">🔑 KMS</text>
+
+  <!-- ACM -->
+  <rect x="630" y="695" width="80" height="35" class="aws-service"/>
+  <text x="670" y="717" class="service-desc" text-anchor="middle">📜 ACM</text>
+
+  <!-- X-Ray -->
+  <rect x="730" y="695" width="80" height="35" class="aws-service"/>
+  <text x="770" y="717" class="service-desc" text-anchor="middle">🔍 X-Ray</text>
+
+  <!-- IAM -->
+  <rect x="830" y="695" width="80" height="35" class="aws-service"/>
+  <text x="870" y="717" class="service-desc" text-anchor="middle">👤 IAM</text>
+
+  <!-- Systems Manager -->
+  <rect x="930" y="695" width="100" height="35" class="aws-service"/>
+  <text x="980" y="717" class="service-desc" text-anchor="middle">🛠️ SSM</text>
+
+  <!-- External Services -->
+  <rect x="280" y="760" width="850" height="75" fill="#f3e5f5" stroke="#9c27b0" stroke-width="1" rx="6"/>
+  <text x="290" y="780" class="service-name">🔗 Integrações Externas</text>
+
+  <!-- OpenAI -->
+  <rect x="300" y="795" width="100" height="30" class="external"/>
+  <text x="350" y="815" class="service-desc" text-anchor="middle">🧠 OpenAI API</text>
+
+  <!-- Azure OpenAI -->
+  <rect x="420" y="795" width="110" height="30" class="external"/>
+  <text x="475" y="815" class="service-desc" text-anchor="middle">☁️ Azure OpenAI</text>
+
+  <!-- Langfuse -->
+  <rect x="550" y="795" width="100" height="30" class="external"/>
+  <text x="600" y="815" class="service-desc" text-anchor="middle">📈 Langfuse</text>
+
+  <!-- PostHog -->
+  <rect x="670" y="795" width="100" height="30" class="external"/>
+  <text x="720" y="815" class="service-desc" text-anchor="middle">📊 PostHog</text>
+
+  <!-- Data Sources -->
+  <rect x="790" y="795" width="130" height="30" class="external"/>
+  <text x="855" y="815" class="service-desc" text-anchor="middle">🗄️ Data Sources</text>
+
+  <!-- Arrows -->
+  <!-- User to Route53 -->
+  <path d="M 100 310 L 125 205" class="arrow"/>
+  
+  <!-- Route53 to CloudFront -->
+  <path d="M 180 230 L 180 248" class="arrow"/>
+  
+  <!-- CloudFront to WAF -->
+  <path d="M 180 300 L 180 318" class="arrow"/>
+  
+  <!-- WAF to ALB -->
+  <path d="M 230 345 L 298 200" class="arrow"/>
+  
+  <!-- ALB to wren-ui -->
+  <path d="M 380 225 L 380 408" class="arrow"/>
+  
+  <!-- wren-ui to wren-ai -->
+  <path d="M 430 437 L 448 437" class="arrow-data"/>
+  
+  <!-- wren-ai to qdrant -->
+  <path d="M 560 437 L 578 437" class="arrow-data"/>
+  
+  <!-- wren-ui to wren-engine -->
+  <path d="M 375 465 L 375 478" class="arrow-data"/>
+  
+  <!-- wren-engine to ibis -->
+  <path d="M 430 507 L 448 507" class="arrow-data"/>
+  
+  <!-- ECS to EFS -->
+  <path d="M 810 437 L 863 420" class="arrow-data"/>
+  
+  <!-- Legend -->
+  <rect x="1000" y="100" width="120" height="200" fill="#fff" stroke="#ccc" stroke-width="1" rx="4"/>
+  <text x="1010" y="120" class="service-name">Legenda:</text>
+  
+  <rect x="1010" y="130" width="20" height="15" class="subnet-public"/>
+  <text x="1035" y="142" class="service-desc">Public Subnet</text>
+  
+  <rect x="1010" y="150" width="20" height="15" class="subnet-private"/>
+  <text x="1035" y="162" class="service-desc">Private Subnet</text>
+  
+  <rect x="1010" y="170" width="20" height="15" class="subnet-data"/>
+  <text x="1035" y="182" class="service-desc">Data Subnet</text>
+  
+  <rect x="1010" y="190" width="20" height="15" class="ecs-task"/>
+  <text x="1035" y="202" class="service-desc">ECS Task</text>
+  
+  <rect x="1010" y="210" width="20" height="15" class="aws-service"/>
+  <text x="1035" y="222" class="service-desc">AWS Service</text>
+  
+  <rect x="1010" y="230" width="20" height="15" class="external"/>
+  <text x="1035" y="242" class="service-desc">External</text>
+  
+  <line x1="1010" y1="260" x2="1030" y2="260" class="arrow"/>
+  <text x="1035" y="263" class="service-desc">Data Flow</text>
+  
+  <line x1="1010" y1="280" x2="1030" y2="280" class="arrow-data"/>
+  <text x="1035" y="283" class="service-desc">Internal</text>
+
+</svg>

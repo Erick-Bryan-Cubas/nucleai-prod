@@ -1,0 +1,121 @@
+import { useEffect, useState } from 'react';
+import { Form, Input, Button, Upload, UploadProps, message } from 'antd';
+import UploadOutlined from '@ant-design/icons/UploadOutlined';
+import { ERROR_TEXTS } from '@/utils/error';
+import { FORM_MODE } from '@/utils/enum';
+import { readFileContent } from '@/utils/file';
+
+interface Props {
+  mode?: FORM_MODE;
+}
+
+const UploadCredentials = (props: {
+  onChange?: (value: string) => void;
+  value?: string;
+}) => {
+  const { onChange, value } = props;
+
+  const [fileList, setFileList] = useState<UploadProps['fileList']>([]);
+
+  useEffect(() => {
+    if (!value) setFileList([]);
+  }, [value]);
+
+  const onUploadChange = async (info) => {
+    const { file, fileList } = info;
+    if (fileList.length) {
+      const uploadFile = fileList[0];
+
+      try {
+        const result = await readFileContent(file.originFileObj);
+        const parsedJson = JSON.parse(result);
+        onChange && onChange(parsedJson);
+        setFileList([uploadFile]);
+      } catch (error) {
+        console.error('Falha ao processar o arquivo', error);
+        message.error(
+          'Falha ao processar o arquivo. Envie um arquivo de credenciais válido.',
+        );
+      }
+    }
+  };
+
+  const onRemove = () => {
+    setFileList([]);
+    onChange && onChange(undefined);
+  };
+
+  return (
+    <Upload
+      accept=".json"
+      fileList={fileList}
+      onChange={onUploadChange}
+      onRemove={onRemove}
+      maxCount={1}
+    >
+      <Button icon={<UploadOutlined />}>Clique para enviar o arquivo JSON da chave</Button>
+    </Upload>
+  );
+};
+
+export default function BigQueryProperties(props: Props) {
+  const { mode } = props;
+  const isEditMode = mode === FORM_MODE.EDIT;
+
+  return (
+    <>
+      <Form.Item
+        label="Nome de exibição"
+        required
+        name="displayName"
+        rules={[
+          {
+            required: true,
+            message: ERROR_TEXTS.CONNECTION.DISPLAY_NAME.REQUIRED,
+          },
+        ]}
+      >
+        <Input placeholder="Nosso BigQuery" />
+      </Form.Item>
+      <Form.Item
+        label="ID do projeto"
+        required
+        name="projectId"
+        rules={[
+          {
+            required: !isEditMode,
+            message: ERROR_TEXTS.CONNECTION.PROJECT_ID.REQUIRED,
+          },
+        ]}
+      >
+        <Input placeholder="ID do projeto no GCP" disabled={isEditMode} />
+      </Form.Item>
+      <Form.Item
+        label="ID do dataset"
+        required
+        name="datasetId"
+        rules={[
+          {
+            required: !isEditMode,
+            message: ERROR_TEXTS.CONNECTION.DATASET_ID.REQUIRED,
+          },
+        ]}
+      >
+        <Input disabled={isEditMode} />
+      </Form.Item>
+      <Form.Item
+        label="Credenciais"
+        required={!isEditMode}
+        name="credentials"
+        rules={[
+          {
+            required: !isEditMode,
+            message: ERROR_TEXTS.CONNECTION.CREDENTIAL.REQUIRED,
+          },
+        ]}
+      >
+        <UploadCredentials />
+      </Form.Item>
+    </>
+  );
+}

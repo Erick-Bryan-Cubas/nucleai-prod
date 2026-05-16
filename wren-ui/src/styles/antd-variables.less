@@ -1,0 +1,185 @@
+// Using in appendData, only for variables defination
+@import '~antd/lib/style/themes/default.less';
+
+@prefix: adm;
+
+// -------- Colors - NucleAI Brand Palette
+
+// >> Primary (Verde - Paleta NucleAI)
+@nucleai-blue-1: #e6fff5;
+@nucleai-blue-2: #b3ffe2;
+@nucleai-blue-3: #80ffcf;
+@nucleai-blue-4: #66ffc4;
+@nucleai-blue-5: #4ed4a0;
+@nucleai-blue-6: #3cae82;
+@nucleai-blue-7: #2d8a66;
+@nucleai-blue-8: #1f664a;
+@nucleai-blue-9: #12422f;
+@nucleai-blue-10: #061e14;
+
+// >> Success (Verde - Paleta 1)
+@nucleai-green-1: #e6fff3;
+@nucleai-green-2: #b3ffe0;
+@nucleai-green-3: #80ffc9;
+@nucleai-green-4: #66ffc4;
+@nucleai-green-5: #4eda40;
+@nucleai-green-6: #3cae82;
+@nucleai-green-7: #2d8a66;
+@nucleai-green-8: #1f664a;
+@nucleai-green-9: #12422f;
+@nucleai-green-10: #061e14;
+
+// >> Secondary (Roxo - Paleta 4)
+@nucleai-purple-1: #f9f0ff;
+@nucleai-purple-2: #ebd9ff;
+@nucleai-purple-3: #d9b8ff;
+@nucleai-purple-4: #cc99ff;
+@nucleai-purple-5: #b080e1;
+@nucleai-purple-6: #8e6389;
+@nucleai-purple-7: #6d4d6a;
+@nucleai-purple-8: #4d364b;
+@nucleai-purple-9: #2d202c;
+@nucleai-purple-10: #0d0a0d;
+
+// >> Citrus (Secondary accent)
+@citrus-base: #f58433;
+@citrus-1: #fff9f0;
+@citrus-2: #ffedd9;
+@citrus-3: #ffd9b0;
+@citrus-4: #ffc187;
+@citrus-5: #ffa75e;
+@citrus-6: @citrus-base;
+@citrus-7: #cf6421;
+@citrus-8: #a84713;
+@citrus-9: #822f08;
+@citrus-10: #5c1d05;
+
+// >> Neutral (Paleta 2 escuro + Paleta 5 claro)
+@gray-1: #fff;
+@gray-2: #fafafa;
+@gray-3: #f2f2f2;
+@gray-4: #f0f0f0;
+@gray-5: #cecece;
+@gray-6: #adadad;
+@gray-7: #5c5c5c;
+@gray-8: #444444;
+@gray-9: #282828;
+@gray-10: #1a1a1a;
+@gray-11: #121212;
+@gray-12: #0a0a0a;
+@gray-13: #000;
+
+// >> Override geekblue with NucleAI Blue
+@geekblue-1: @nucleai-blue-1;
+@geekblue-2: @nucleai-blue-2;
+@geekblue-3: @nucleai-blue-3;
+@geekblue-4: @nucleai-blue-4;
+@geekblue-5: @nucleai-blue-5;
+@geekblue-6: @nucleai-blue-6;
+@geekblue-7: @nucleai-blue-7;
+@geekblue-8: @nucleai-blue-8;
+@geekblue-9: @nucleai-blue-9;
+@geekblue-10: @nucleai-blue-10;
+
+// >> Override green with NucleAI Green
+@green-1: @nucleai-green-1;
+@green-2: @nucleai-green-2;
+@green-3: @nucleai-green-3;
+@green-4: @nucleai-green-4;
+@green-5: @nucleai-green-5;
+@green-6: @nucleai-green-6;
+@green-7: @nucleai-green-7;
+@green-8: @nucleai-green-8;
+@green-9: @nucleai-green-9;
+@green-10: @nucleai-green-10;
+
+// >> Override purple with NucleAI Purple
+@purple-1: @nucleai-purple-1;
+@purple-2: @nucleai-purple-2;
+@purple-3: @nucleai-purple-3;
+@purple-4: @nucleai-purple-4;
+@purple-5: @nucleai-purple-5;
+@purple-6: @nucleai-purple-6;
+@purple-7: @nucleai-purple-7;
+@purple-8: @nucleai-purple-8;
+@purple-9: @nucleai-purple-9;
+@purple-10: @nucleai-purple-10;
+
+@preset-colors: pink, magenta, red, volcano, orange, yellow, gold, cyan, lime,
+  green, blue, geekblue, purple, citrus, gray;
+
+@black: @gray-13;
+@white: @gray-1;
+
+@primary-color: @nucleai-blue-6;
+
+// --- Dark Theme Overrides ---
+@text-color: @gray-5;
+@text-color-secondary: @gray-6;
+@heading-color: @gray-4;
+@success-color: @nucleai-green-6;
+@warning-color: @gold-6;
+@error-color: @red-5;
+@disabled-color: rgba(255, 255, 255, 0.25);
+@disabled-bg: @gray-9;
+
+// Layouts & Body
+@body-background: #0f1117;
+@layout-body-background: #0f1117;
+@layout-header-background: #0d1117;
+
+// Components & Cards
+@component-background: @gray-10;
+@card-background: @gray-11;
+@popover-background: @gray-10;
+@popover-color: @text-color;
+
+// Borders
+@border-color-base: @gray-9;
+@border-color-split: rgba(255, 255, 255, 0.08);
+
+// Tables
+@table-header-bg: @gray-11;
+@table-header-color: @gray-4;
+@table-row-hover-bg: rgba(255, 255, 255, 0.08);
+@table-bg: transparent;
+
+// Menus & Inputs
+@menu-dark-bg: @layout-header-background;
+@input-bg: @gray-11;
+@input-border-color: @gray-9;
+@input-color: @gray-4;
+@select-background: @gray-11;
+@select-border-color: @gray-9;
+// Functions
+.make-color-variables(@i: length(@preset-colors)) when (@i > 0) {
+  .make-color-variables(@i - 1);
+  @color: extract(@preset-colors, @i);
+  each(range(1, 10, 1), {
+    @colorVar: '@{color}-@{index}';
+    --@{color}-@{index}: @@colorVar;
+  });
+}
+
+// Header
+@layout-header-height: 20px;
+
+@breadcrumb-last-item-color: @text-color;
+@table-padding-vertical: 12px;
+@table-header-cell-split-color: transparent;
+@border-radius-base: 4px;
+
+// Typography
+@typography-title-font-weight: 700;
+@heading-1-size: ceil(@font-size-base * 2.85);
+// @heading-2-size: ceil(@font-size-base * 2.14);
+// @heading-3-size: ceil(@font-size-base * 1.71);
+// @heading-4-size: ceil(@font-size-base * 1.42);
+// @heading-5-size: ceil(@font-size-base * 1.14);
+
+// Avatar
+@avatar-size-xs: 16px;
+@avatar-font-size-xs: 12px;
+
+@tooltip-bg: @gray-10;
+@tooltip-color: @text-color;

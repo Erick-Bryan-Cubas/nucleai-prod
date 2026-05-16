@@ -1,0 +1,127 @@
+// override antd styles — dark mode
+.ant-table {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #161b22;
+
+  .ant-table-container,
+  .ant-table-content,
+  table {
+    background: transparent;
+  }
+
+  .ant-table-thead > tr > th {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--gray-5) !important;
+    font-weight: 600;
+  }
+
+  .ant-table-tbody > tr > td {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: var(--gray-4);
+  }
+
+  .ant-table-tbody > tr.ant-table-row:hover > td,
+  .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+  }
+
+  .ant-table-row:last-child .ant-table-cell {
+    border-bottom: none;
+  }
+
+  .ant-empty-description {
+    color: var(--gray-6);
+  }
+
+  .ant-table-placeholder {
+    background: transparent !important;
+
+    &:hover > td {
+      background: transparent !important;
+    }
+  }
+
+  &.ant-table-empty {
+    .ant-table-body {
+      overflow: auto !important;
+    }
+
+    .ant-table-tbody .ant-table-cell {
+      border-bottom: none;
+    }
+  }
+
+  .ant-table-expanded-row {
+    > .ant-table-cell {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+  }
+
+  .adm-nested-table {
+    .ant-table {
+      border: none;
+      border-radius: 0;
+
+      .ant-table-thead > tr > th {
+        background: rgba(255, 255, 255, 0.03) !important;
+      }
+
+      .ant-table-tbody > tr.ant-table-row:hover > td,
+      .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+        background: rgba(255, 255, 255, 0.04) !important;
+      }
+    }
+  }
+
+  &--text-sm {
+    .ant-table {
+      font-size: @font-size-sm !important;
+    }
+  }
+}
+
+// scrollbar dark
+.ant-table-wrapper {
+  .ant-table-body::-webkit-scrollbar {
+    height: 6px;
+    background: transparent;
+  }
+  .ant-table-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 3px;
+  }
+}
+
+.ant-table-wrapper:not(.ant-table-has-header) {
+  .ant-table-empty {
+    border: none;
+
+    .ant-empty-normal {
+      margin: 80px 0;
+    }
+  }
+}
+
+// filter dropdown dark
+.ant-table-filter-dropdown {
+  background: #1c2330 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  .ant-dropdown-menu {
+    background: transparent !important;
+  }
+
+  .ant-dropdown-menu-item {
+    color: var(--gray-4) !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06) !important;
+    }
+  }
+
+  .ant-table-filter-dropdown-btns {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}

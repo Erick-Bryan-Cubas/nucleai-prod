@@ -1,0 +1,129 @@
+.@{prefix}-chart {
+  position: relative;
+  margin: 0 auto;
+  padding: 16px 0;
+
+  &-additional {
+    position: absolute;
+    z-index: 1;
+    top: 16px;
+    right: 36px;
+
+    button {
+      background: rgba(22, 27, 34, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+      padding: 0 2px;
+      cursor: pointer;
+      width: 28px;
+      height: 28px;
+      opacity: 0.5;
+      color: var(--gray-5);
+      transition: all 0.4s ease-in;
+
+      &:hover {
+        opacity: 1;
+        color: var(--gray-2);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      + button {
+        margin-left: 8px;
+      }
+    }
+  }
+
+  &--no-actions {
+    padding: 0;
+    .vega-embed .chart-wrapper {
+      padding-top: 0 !important;
+    }
+    .vega-embed summary {
+      display: none;
+    }
+  }
+
+  .vega-embed {
+    background: transparent;
+
+    &:hover {
+      summary {
+        opacity: 0.6 !important;
+      }
+    }
+
+    summary {
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: none;
+      background: rgba(22, 27, 34, 0.85) !important;
+      transition: all 0.4s ease-in;
+      color: var(--gray-5);
+      opacity: 0.4 !important;
+
+      &:hover {
+        opacity: 1 !important;
+        color: var(--gray-2);
+      }
+    }
+
+    .chart-wrapper {
+      padding-top: 40px;
+      background: transparent;
+    }
+
+    &.has-actions {
+      padding-right: 0;
+    }
+
+    .vega-actions {
+      background: #1c2330 !important;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+
+      a {
+        font-size: 12px;
+        padding: 6px 16px;
+        color: var(--gray-4) !important;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.06) !important;
+          color: var(--gray-2) !important;
+        }
+      }
+    }
+
+    // force SVG background transparent so body bg shows through
+    svg {
+      background: transparent !important;
+    }
+  }
+
+  &__fullscreen {
+    position: absolute;
+    top: 32px;
+    right: 0px;
+  }
+
+  .ant-btn-icon-only {
+    width: auto;
+    height: auto;
+    padding: 6px;
+  }
+}
+
+#vg-tooltip-element.vg-tooltip.custom-theme {
+  display: none;
+  background-color: @gray-10;
+  color: @gray-1;
+  border-color: @gray-9;
+  animation: fade-in 0.2s ease-out;
+
+  table tr td.key {
+    color: @gray-6;
+  }
+}
+
+#vg-tooltip-element.visible {
+  display: block !important;
+}

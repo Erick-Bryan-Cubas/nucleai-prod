@@ -1,0 +1,19 @@
+# ============================================
+# NucleAI - Deploy AWS EC2
+# ============================================
+# Copie este arquivo para prod.tfvars e ajuste conforme necessário:
+#   cp prod.tfvars.example prod.tfvars
+#
+# O arquivo prod.tfvars NÃO deve ser commitado (está no .gitignore).
+
+aws_region    = "us-east-2"
+instance_type = "t3.xlarge"
+git_repo      = "https://github.com/Erick-Bryan-Cubas/nucleai-prod.git"
+
+# CIDR permitido para SSH. Use "0.0.0.0/0" para qualquer IP (não recomendado)
+# ou seu IP público específico, ex: "203.0.113.45/32"
+allowed_ssh_cidr = "0.0.0.0/0"
+
+# A OPENAI_API_KEY é passada via -var na execução do terraform apply:
+#   terraform apply -var-file=environments/prod.tfvars -var="openai_api_key=sk-proj-..."
+# NUNCA coloque a chave aqui — este arquivo pode acabar commitado por engano.

@@ -1,0 +1,48 @@
+.ant-alert {
+  align-items: flex-start;
+  .anticon-exclamation-circle,
+  .anticon-warning {
+    margin-top: 4px;
+  }
+  .ant-alert-message {
+    color: currentColor;
+  }
+}
+
+// dark mode alert overrides
+.ant-alert-info {
+  background: rgba(60, 174, 130, 0.1) !important;
+  border-color: rgba(60, 174, 130, 0.3) !important;
+
+  .ant-alert-message {
+    color: var(--gray-4) !important;
+  }
+  .ant-alert-icon {
+    color: var(--geekblue-4) !important;
+  }
+}
+
+.ant-alert-error {
+  background: rgba(164, 3, 3, 0.1) !important;
+  border-color: rgba(164, 3, 3, 0.3) !important;
+
+  .ant-alert-message {
+    color: var(--gray-4) !important;
+  }
+  .ant-alert-description {
+    color: var(--gray-5) !important;
+  }
+}
+
+.ant-alert-warning {
+  background: rgba(164, 120, 3, 0.1) !important;
+  border-color: rgba(164, 120, 3, 0.3) !important;
+
+  .ant-alert-message {
+    color: var(--gray-4) !important;
+  }
+}
+
+.ant-alert-banner {
+  border-radius: 4px;
+}

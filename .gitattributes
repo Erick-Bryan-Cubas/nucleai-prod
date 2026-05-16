@@ -1,0 +1,4 @@
+# Shell scripts and entrypoints must use LF — the wren-ai-service image runs
+# them under POSIX `sh`, which fails on CRLF with "set: Illegal option -".
+*.sh        text eol=lf
+entrypoint* text eol=lf

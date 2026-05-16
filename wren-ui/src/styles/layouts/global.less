@@ -1,0 +1,19 @@
+:root {
+  .make-color-variables();
+  --disabled: @disabled-color;
+}
+
+body {
+  min-width: 360px;
+  background-color: #0f1117;
+  color: var(--gray-4);
+}
+
+@media (prefers-color-scheme: dark) {
+  html body {
+    background: #0f1117;
+  }
+  h1.next-error-h1 {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}

@@ -1,0 +1,42 @@
+NucleAI
+=======
+
+This project is a fork and modification of WrenAI by Canner Inc.
+
+Original Project
+----------------
+- Name:       WrenAI
+- Copyright:  Copyright (c) 2024 Canner Inc.
+- License:    GNU Affero General Public License v3.0 (AGPL-3.0)
+- Source:     https://github.com/Canner/WrenAI
+- Website:    https://getwren.ai
+
+License
+-------
+This project is licensed under the GNU Affero General Public License v3.0,
+the same license as the original WrenAI project. See the LICENSE file for
+the full text of the license.
+
+In compliance with AGPL-3.0 Section 13 (remote network interaction), the
+complete source code of this modified version is made available at:
+
+  https://github.com/Erick-Bryan-Cubas/nucleai-prod.git
+
+Modifications
+-------------
+This fork includes the following modifications from the original WrenAI:
+
+- Custom branding (NucleAI) and Portuguese-language documentation
+- Self-hosted Langfuse v3 integration for LLM observability
+- Runtime LLM configuration via UI (writes to .env.runtime and config.yaml)
+- "Skip AI re-indexing" toggle to reduce OpenAI token costs during development
+- AWS ECS/EC2 Terraform deployment manifests
+- Additional chart types (heatmap, scatter) and UI refinements
+- Custom green theme
+- API Management improvements
+- AWS deployment infrastructure (Terraform)
+
+Acknowledgments
+---------------
+Special thanks to the Canner Inc. team and all WrenAI contributors for
+creating an excellent open-source Text-to-SQL platform.

@@ -1,0 +1,47 @@
+.adm-btn-no-style {
+  cursor: pointer;
+  background: transparent;
+  line-height: 1.2;
+  height: auto;
+  border: none;
+}
+
+// dark mode: default buttons (outlined) throughout the app
+.ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text):not(.ant-btn-dangerous) {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--gray-4);
+
+  &:hover,
+  &:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--gray-2);
+  }
+
+  &[disabled] {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: var(--gray-7);
+  }
+}
+
+.adm-onboarding-btn {
+  width: 130px;
+}
+
+.adm-modeling-header-btn {
+  width: 60px;
+}
+
+.adm-fix-it-btn {
+  border-color: @citrus-6;
+  color: @citrus-6;
+  background-color: @citrus-1;
+  &:hover,
+  &:focus {
+    background-color: @citrus-1;
+    border-color: @citrus-4;
+    color: @citrus-5;
+  }
+}

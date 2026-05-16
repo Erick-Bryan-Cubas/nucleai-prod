@@ -1,0 +1,11 @@
+.next
+node_modules
+public
+out
+dist
+coverage
+.next
+out
+build
+*.log
+.DS_Store

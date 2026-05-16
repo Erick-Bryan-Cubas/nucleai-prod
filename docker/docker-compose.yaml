@@ -1,0 +1,316 @@
+volumes:
+  data:
+  qdrant_data:
+  # NucleAI: Langfuse self-hosted v3
+  langfuse_postgres_data:
+  langfuse_clickhouse_data:
+  langfuse_clickhouse_logs:
+  langfuse_minio_data:
+  langfuse_redis_data:
+
+networks:
+  wren:
+    driver: bridge
+
+services:
+  bootstrap:
+    image: ghcr.io/canner/wren-bootstrap:${WREN_BOOTSTRAP_VERSION}
+    pull_policy: always
+    restart: on-failure
+    platform: ${PLATFORM}
+    environment:
+      DATA_PATH: /app/data
+    volumes:
+      - data:/app/data
+    command: /bin/sh /app/init.sh
+
+  wren-engine:
+    image: ghcr.io/canner/wren-engine:${WREN_ENGINE_VERSION}
+    pull_policy: always
+    restart: on-failure
+    platform: ${PLATFORM}
+    expose:
+      - ${WREN_ENGINE_PORT}
+      - ${WREN_ENGINE_SQL_PORT}
+    volumes:
+      - data:/usr/src/app/etc
+      - ${PROJECT_DIR}/data:/usr/src/app/data
+    networks:
+      - wren
+    depends_on:
+      - bootstrap
+
+  ibis-server:
+    image: ghcr.io/canner/wren-engine-ibis:${IBIS_SERVER_VERSION}
+    pull_policy: always
+    restart: on-failure
+    platform: ${PLATFORM}
+    expose:
+      - ${IBIS_SERVER_PORT}
+    environment:
+      WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
+    volumes:
+      - ${LOCAL_STORAGE:-.}:/usr/src/app/data
+    networks:
+      - wren
+
+  wren-ai-service:
+    image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
+    pull_policy: always
+    restart: on-failure
+    platform: ${PLATFORM}
+    # NucleAI: wrapper attaches POST /v1/config/reload before uvicorn boots.
+    entrypoint: ["/bin/sh", "/app/patches/entrypoint-wrapper.sh"]
+    expose:
+      - ${WREN_AI_SERVICE_PORT}
+    ports:
+      - ${AI_SERVICE_FORWARD_PORT}:${WREN_AI_SERVICE_PORT}
+    environment:
+      # sometimes the console won't show print messages,
+      # using PYTHONUNBUFFERED: 1 can fix this
+      PYTHONUNBUFFERED: 1
+      CONFIG_PATH: /app/config.yaml
+    env_file:
+      - ${PROJECT_DIR}/.env
+      # NucleAI: runtime overrides written by the UI (OPENAI_API_KEY, etc).
+      # Loaded after .env so it wins precedence. File must exist (even empty).
+      - ${PROJECT_DIR}/.env.runtime
+    volumes:
+      # config.yaml is :rw so the UI-driven reload flow can rewrite it.
+      - ${PROJECT_DIR}/config.yaml:/app/config.yaml:rw
+      # NucleAI: .env.runtime is also mounted so config_reload.py can inject
+      # OPENAI_API_KEY into os.environ without a container restart.
+      - ${PROJECT_DIR}/.env.runtime:/app/.env.runtime:ro
+      - ${PROJECT_DIR}/data:/app/data:ro
+      # NucleAI runtime patches (config_reload router + bootstrap).
+      - ${PROJECT_DIR}/ai-service-patches:/app/patches:ro
+    networks:
+      - wren
+    depends_on:
+      - qdrant
+
+  qdrant:
+    image: qdrant/qdrant:${QDRANT_VERSION}
+    pull_policy: always
+    restart: on-failure
+    expose:
+      - 6333
+      - 6334
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - wren
+
+  wren-ui:
+    image: ghcr.io/canner/wren-ui:${WREN_UI_VERSION}
+    pull_policy: never
+    build:
+      context: ../wren-ui
+      dockerfile: Dockerfile
+    restart: on-failure
+    platform: ${PLATFORM}
+    environment:
+      DB_TYPE: sqlite
+      # /app is the working directory in the container
+      SQLITE_FILE: /app/data/db.sqlite3
+      WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
+      WREN_AI_ENDPOINT: http://wren-ai-service:${WREN_AI_SERVICE_PORT}
+      IBIS_SERVER_ENDPOINT: http://ibis-server:${IBIS_SERVER_PORT}
+      # this is for telemetry to know the model, i think ai-service might be able to provide a endpoint to get the information
+      GENERATION_MODEL: ${GENERATION_MODEL}
+      # telemetry
+      WREN_ENGINE_PORT: ${WREN_ENGINE_PORT}
+      WREN_AI_SERVICE_VERSION: ${WREN_AI_SERVICE_VERSION}
+      WREN_UI_VERSION: ${WREN_UI_VERSION}
+      WREN_ENGINE_VERSION: ${WREN_ENGINE_VERSION}
+      USER_UUID: ${USER_UUID}
+      POSTHOG_API_KEY: ${POSTHOG_API_KEY}
+      POSTHOG_HOST: ${POSTHOG_HOST}
+      TELEMETRY_ENABLED: ${TELEMETRY_ENABLED}
+      # client side
+      NEXT_PUBLIC_USER_UUID: ${USER_UUID}
+      NEXT_PUBLIC_POSTHOG_API_KEY: ${POSTHOG_API_KEY}
+      NEXT_PUBLIC_POSTHOG_HOST: ${POSTHOG_HOST}
+      NEXT_PUBLIC_TELEMETRY_ENABLED: ${TELEMETRY_ENABLED}
+      EXPERIMENTAL_ENGINE_RUST_VERSION: ${EXPERIMENTAL_ENGINE_RUST_VERSION}
+      # configs
+      WREN_PRODUCT_VERSION: ${WREN_PRODUCT_VERSION}
+      # NucleAI: default for the "Skip AI re-indexing" switch in the UI.
+      # When true, a click on Deploy adopts the new MDL hash without
+      # calling wren-ai-service (no OpenAI token cost).
+      NUCLEAI_SKIP_REINDEX_DEFAULT: ${NUCLEAI_SKIP_REINDEX_DEFAULT:-false}
+      NEXT_PUBLIC_NUCLEAI_SKIP_REINDEX_DEFAULT: ${NUCLEAI_SKIP_REINDEX_DEFAULT:-false}
+      # NucleAI: directory (inside wren-ui) where the UI writes config.yaml
+      # and .env.runtime — same host path that wren-ai-service reads from.
+      LLM_SHARED_DIR: /app/shared
+    ports:
+      # HOST_PORT is the port you want to expose to the host machine
+      - ${HOST_PORT}:3000
+    volumes:
+      - data:/app/data
+      # NucleAI: shared host dir so wren-ui can rewrite config.yaml /
+      # .env.runtime that wren-ai-service consumes.
+      - ${PROJECT_DIR}:/app/shared:rw
+    networks:
+      - wren
+    # NucleAI: lets wren-ui reach Ollama running on the Docker host via
+    # host.docker.internal — Docker Desktop adds this automatically, but
+    # Linux daemons need it declared explicitly.
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      - wren-ai-service
+      - wren-engine
+
+  # ============================================================
+  # NucleAI: Langfuse v3 self-hosted (LLM observability)
+  # Web UI: http://localhost:3100  (port 3000 inside container)
+  # Pre-provisioned project + API keys via LANGFUSE_INIT_* so
+  # wren-ai-service can authenticate without manually creating them.
+  # ============================================================
+  langfuse-postgres:
+    image: docker.io/postgres:17
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${LANGFUSE_POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: postgres
+      TZ: UTC
+      PGTZ: UTC
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - langfuse_postgres_data:/var/lib/postgresql/data
+    networks:
+      - wren
+
+  langfuse-clickhouse:
+    image: docker.io/clickhouse/clickhouse-server
+    restart: always
+    user: '101:101'
+    environment:
+      CLICKHOUSE_DB: default
+      CLICKHOUSE_USER: clickhouse
+      CLICKHOUSE_PASSWORD: ${LANGFUSE_CLICKHOUSE_PASSWORD:-clickhouse}
+    volumes:
+      - langfuse_clickhouse_data:/var/lib/clickhouse
+      - langfuse_clickhouse_logs:/var/log/clickhouse-server
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 1s
+    networks:
+      - wren
+
+  langfuse-redis:
+    image: docker.io/redis:7
+    restart: always
+    command: >
+      --requirepass ${LANGFUSE_REDIS_AUTH:-myredissecret}
+      --maxmemory-policy noeviction
+    volumes:
+      - langfuse_redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 3s
+      timeout: 10s
+      retries: 10
+    networks:
+      - wren
+
+  langfuse-minio:
+    image: docker.io/minio/minio:latest
+    restart: always
+    entrypoint: sh
+    command: -c 'mkdir -p /data/langfuse && minio server --address ":9000" --console-address ":9001" /data'
+    environment:
+      MINIO_ROOT_USER: ${LANGFUSE_MINIO_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${LANGFUSE_MINIO_PASSWORD:-miniosecret}
+    ports:
+      # External port 9090 maps to MinIO 9000. Browser uses this to download
+      # media uploaded to Langfuse, so the host port must match the
+      # LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT below.
+      - '127.0.0.1:9090:9000'
+      - '127.0.0.1:9091:9001'
+    volumes:
+      - langfuse_minio_data:/data
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks:
+      - wren
+
+  langfuse-worker:
+    image: docker.io/langfuse/langfuse-worker:3
+    restart: always
+    depends_on: &langfuse-depends-on
+      langfuse-postgres:
+        condition: service_healthy
+      langfuse-clickhouse:
+        condition: service_healthy
+      langfuse-redis:
+        condition: service_healthy
+      langfuse-minio:
+        condition: service_healthy
+    environment: &langfuse-env
+      DATABASE_URL: postgresql://postgres:${LANGFUSE_POSTGRES_PASSWORD:-postgres}@langfuse-postgres:5432/postgres
+      SALT: ${LANGFUSE_SALT}
+      ENCRYPTION_KEY: ${LANGFUSE_ENCRYPTION_KEY}
+      TELEMETRY_ENABLED: 'false'
+      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: 'false'
+      CLICKHOUSE_MIGRATION_URL: clickhouse://langfuse-clickhouse:9000
+      CLICKHOUSE_URL: http://langfuse-clickhouse:8123
+      CLICKHOUSE_USER: clickhouse
+      CLICKHOUSE_PASSWORD: ${LANGFUSE_CLICKHOUSE_PASSWORD:-clickhouse}
+      CLICKHOUSE_CLUSTER_ENABLED: 'false'
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_EVENT_UPLOAD_REGION: auto
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: ${LANGFUSE_MINIO_USER:-minio}
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: ${LANGFUSE_MINIO_PASSWORD:-miniosecret}
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://langfuse-minio:9000
+      LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: 'true'
+      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
+      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_MEDIA_UPLOAD_REGION: auto
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: ${LANGFUSE_MINIO_USER:-minio}
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: ${LANGFUSE_MINIO_PASSWORD:-miniosecret}
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://langfuse-minio:9000
+      LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: 'true'
+      LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: media/
+      REDIS_HOST: langfuse-redis
+      REDIS_PORT: 6379
+      REDIS_AUTH: ${LANGFUSE_REDIS_AUTH:-myredissecret}
+    networks:
+      - wren
+
+  langfuse-web:
+    image: docker.io/langfuse/langfuse:3
+    restart: always
+    depends_on: *langfuse-depends-on
+    ports:
+      - '127.0.0.1:3100:3000'
+    environment:
+      <<: *langfuse-env
+      NEXTAUTH_URL: ${LANGFUSE_NEXTAUTH_URL:-http://localhost:3100}
+      NEXTAUTH_SECRET: ${LANGFUSE_NEXTAUTH_SECRET}
+      # NucleAI: pre-provision an org, project and API keys on first boot so
+      # wren-ai-service can authenticate without anyone opening the UI first.
+      LANGFUSE_INIT_ORG_ID: nucleai
+      LANGFUSE_INIT_ORG_NAME: NucleAI
+      LANGFUSE_INIT_PROJECT_ID: nucleai-default
+      LANGFUSE_INIT_PROJECT_NAME: NucleAI
+      LANGFUSE_INIT_PROJECT_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+      LANGFUSE_INIT_PROJECT_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
+      LANGFUSE_INIT_USER_EMAIL: ${LANGFUSE_INIT_USER_EMAIL:-admin@nucleai.local}
+      LANGFUSE_INIT_USER_NAME: ${LANGFUSE_INIT_USER_NAME:-NucleAI Admin}
+      LANGFUSE_INIT_USER_PASSWORD: ${LANGFUSE_INIT_USER_PASSWORD:-changeme}
+    networks:
+      - wren
